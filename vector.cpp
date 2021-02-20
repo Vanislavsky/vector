@@ -3,6 +3,7 @@
 //
 
 #include <stdexcept>
+#include <limits>
 #include "vector.h"
 
 namespace fefu
@@ -83,8 +84,6 @@ namespace fefu
 
     template<typename T>
     vector<T>::vector() {
-        //TODO
-        buffer = new T[CAPACITY];
         SIZE = 0;
     }
 
@@ -96,8 +95,8 @@ namespace fefu
     template<typename T>
     vector<T>& vector<T>::operator=(const vector<T> &other) {
         SIZE = other.SIZE;
-        if(SIZE < CAPACITY) {
-            //TODO
+        while (SIZE >= CAPACITY) {
+            auto_reserve_helper();
         }
         for(int i = 0; i < SIZE; i++) {
             buffer[i] = other.buffer[i];
@@ -107,8 +106,8 @@ namespace fefu
     template<typename T>
     vector<T>& vector<T>::operator=(std::initializer_list<T> ilist) {
         SIZE = ilist.size();
-        if(SIZE < CAPACITY) {
-            //TODO
+        while (SIZE >= CAPACITY) {
+            auto_reserve_helper();
         }
 
         for(int i = 0; i < SIZE; i++) {
@@ -172,6 +171,26 @@ namespace fefu
     }
 
     template<typename T>
+    void vector<T>::reserve(size_type new_cap) {
+        if(CAPACITY < new_cap) {
+            auto temp_buffer = new value_type[CAPACITY];
+            std::swap(buffer, temp_buffer);
+
+            buffer = new T[new_cap];
+            for(int i = 0; i < new_cap; i++)
+                buffer[i] = 0;
+            for(int i = 0; i < SIZE; i++)
+                buffer[i] = temp_buffer[i];
+        }
+    }
+
+    template<typename T>
+    void vector<T>::resize(size_type count) {
+        reserve(count);
+        SIZE = count;
+    }
+
+    template<typename T>
     size_t vector<T>::capacity() const {
         return CAPACITY;
     }
@@ -180,8 +199,8 @@ namespace fefu
 
     template<typename T>
     void vector<T>::push_back(const T &value) {
-        if(SIZE > CAPACITY) {
-            //TODO
+        if (SIZE >= CAPACITY) {
+            auto_reserve_helper();
         }
         buffer[SIZE++] = value;
     }
@@ -196,5 +215,20 @@ namespace fefu
         for(int i = 0; i < SIZE; i++)
             buffer[i] = 0;
         SIZE = 0;
+    }
+
+    template<typename T>
+    void vector<T>::auto_reserve_helper() {
+        auto temp_buffer = new value_type[CAPACITY];
+        std::swap(buffer, temp_buffer);
+
+        if (CAPACITY == 0) {
+            CAPACITY = 1;
+        } else {
+            CAPACITY *= 2;
+        }
+        buffer = new T[CAPACITY];
+        for(int i = 0; i < SIZE; i++)
+            buffer[i] = temp_buffer[i];
     }
 }
