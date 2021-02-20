@@ -4,6 +4,7 @@
 
 #include <stdexcept>
 #include <limits>
+#include <utility>
 #include "vector.h"
 
 namespace fefu
@@ -88,6 +89,31 @@ namespace fefu
     }
 
     template<typename T>
+    vector<T>::vector(size_type count) {
+        SIZE = 0;
+
+        resize(count);
+    }
+
+    template<typename T>
+    vector<T>::vector(const vector<T> &other) {
+        SIZE = other.SIZE;
+        while (SIZE >= CAPACITY) {
+            auto_reserve_helper();
+        }
+        for(int i = 0; i < SIZE; i++) {
+            buffer[i] = other.buffer[i];
+        }
+    }
+
+    template<typename T>
+    vector<T>::vector(vector<T> &&other)
+    :
+    SIZE(other.SIZE),
+    CAPACITY(other.CAPACITY),
+    buffer(std::move(other.buffer)) {}
+
+    template<typename T>
     vector<T>::~vector() {
         delete [] buffer;
     }
@@ -101,6 +127,13 @@ namespace fefu
         for(int i = 0; i < SIZE; i++) {
             buffer[i] = other.buffer[i];
         }
+    }
+
+    template<typename T>
+    vector<T> & vector<T>::operator=(vector<T> &&other) {
+        buffer = std::move(other.buffer);
+        SIZE = other.SIZE;
+        CAPACITY = other.CAPACITY;
     }
 
     template<typename T>

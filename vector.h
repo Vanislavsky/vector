@@ -74,8 +74,11 @@ namespace fefu
 
 
         vector();
-        ~vector();
-        //explicit vector( const Allocator& alloc );
+       explicit vector( size_type count );
+        vector( const vector& other );
+        vector( vector&& other );
+       ~vector();
+//        explicit vector( const Allocator& alloc );
 //    vector( size_type count,
 //            const T& value,
 //            const Allocator& alloc = Allocator());
