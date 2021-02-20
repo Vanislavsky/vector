@@ -120,6 +120,7 @@ namespace fefu
         void pop_back();
         void resize ( size_type count ) ;
         void swap( vector& other );
+        iterator insert( iterator pos, const value_type & value );
 
         //Non-member functions
 

@@ -177,8 +177,6 @@ namespace fefu
             std::swap(buffer, temp_buffer);
 
             buffer = new T[new_cap];
-            for(int i = 0; i < new_cap; i++)
-                buffer[i] = 0;
             for(int i = 0; i < SIZE; i++)
                 buffer[i] = temp_buffer[i];
         }
@@ -212,10 +210,21 @@ namespace fefu
 
     template<typename T>
     void vector<T>::clear() {
-        for(int i = 0; i < SIZE; i++)
-            buffer[i] = 0;
         SIZE = 0;
     }
+
+    template<typename T>
+    void vector<T>::swap(vector<T> &other) {
+        std::swap(buffer, other.buffer);
+        std::swap(SIZE, other.SIZE);
+        std::swap(CAPACITY, other.CAPACITY);
+    }
+
+    template<typename T>
+    vector_iterator<T> vector<T>::insert(iterator pos, const value_type &value) {
+        *pos = value;
+    }
+
 
     template<typename T>
     void vector<T>::auto_reserve_helper() {
@@ -228,6 +237,7 @@ namespace fefu
             CAPACITY *= 2;
         }
         buffer = new T[CAPACITY];
+//        for(int i = 0; )
         for(int i = 0; i < SIZE; i++)
             buffer[i] = temp_buffer[i];
     }
