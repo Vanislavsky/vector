@@ -117,6 +117,12 @@ namespace fefu
     vector<T>::~vector() {
         delete [] buffer;
     }
+    template<typename T>
+    vector<T>::vector(std::initializer_list<T> init) {
+        for (auto &element : init) {
+            push_back(element);
+        }
+    }
 
     template<typename T>
     vector<T>& vector<T>::operator=(const vector<T> &other) {
@@ -237,6 +243,11 @@ namespace fefu
     }
 
     template<typename T>
+    void vector<T>::push_back(T &&value) {
+        push_back(std::move(value));
+    }
+
+    template<typename T>
     void vector<T>::pop_back() {
         buffer[SIZE--] = 0;
     }
@@ -258,6 +269,37 @@ namespace fefu
         *pos = value;
     }
 
+    template<typename T>
+    template< class... Args >
+    vector_iterator<T> vector<T>::emplace(const_iterator pos, Args &&...args) {
+        return insert(pos ,value_type(std::forward<Args>(args)...));
+    }
+
+    template<typename T>
+    template< class... Args >
+    void vector<T>::emplace_back(Args &&...args) {
+        return push_back(value_type(std::forward<Args>(args)...));
+    }
+
+    template<typename T>
+    bool vector<T>::operator==(const vector<T> other) const {
+        if(SIZE != other.SIZE)
+            return false;
+
+        for(int i = 0; i < SIZE; i++) {
+            for(int j = 0; j < other.SIZE; j++) {
+                if(buffer[i] != other.buffer[i])
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    template<typename T>
+    bool vector<T>::operator!=(const vector<T> other) const {
+        return !(this == other);
+    }
 
     template<typename T>
     void vector<T>::auto_reserve_helper() {

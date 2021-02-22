@@ -5,16 +5,19 @@
 #include <string>
 
 int main() {
-    fefu::vector<int> a;
-    a.push_back(10);
-    a.push_back(20);
-    for(auto it = a.begin(); it != a.end(); it++) {
-        a.insert(it, 30);
-    }
-
+    fefu::vector<int> a = {10, 20, 30, 40};
     for(int i = 0; i < a.size(); i++) {
         std::cout << a[i] << std::endl;
     }
+//    a.push_back(10);
+//    a.push_back(20);
+//    for(auto it = a.begin(); it != a.end(); it++) {
+//        a.insert(it, 30);
+//    }
+//
+//    for(int i = 0; i < a.size(); i++) {
+//        std::cout << a[i] << std::endl;
+//    }
 
     //fefu::vector<int> a;
 //    std::cout << a.capacity();

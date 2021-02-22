@@ -77,15 +77,8 @@ namespace fefu
        explicit vector( size_type count );
         vector( const vector& other );
         vector( vector&& other );
+        vector( std::initializer_list<T> init);
        ~vector();
-//        explicit vector( const Allocator& alloc );
-//    vector( size_type count,
-//            const T& value,
-//            const Allocator& alloc = Allocator());
-//    explicit vector( size_type count );
-//    template< class InputIt >
-//    vector( InputIt first, InputIt last,
-//            const Allocator& alloc = Allocator() );
 
 
         vector& operator=( const vector& other );
@@ -106,8 +99,6 @@ namespace fefu
         const_iterator cbegin() const noexcept;
         iterator end();
         const_iterator cend() const noexcept;
-//    reverse_iterator rend ( ) ;
-//    const_reverse_iterator crend ( ) const noexcept ;
 
         //Capacity
         bool empty() const;
@@ -120,12 +111,21 @@ namespace fefu
         //Modifiers
         void clear();
         void push_back( const T& value );
+        void push_back( T&& value );
         void pop_back();
         void resize ( size_type count ) ;
         void swap( vector& other );
         iterator insert( iterator pos, const value_type & value );
+        template< class... Args >
+        iterator emplace( const_iterator pos, Args&&... args );
+        template< class... Args >
+        void emplace_back( Args&&... args );
+        iterator erase( iterator pos );
+
 
         //Non-member functions
+        bool operator==(const vector<T> other) const;
+        bool operator!=(const vector<T> other) const;
 
     private:
         void auto_reserve_helper();
